@@ -4,9 +4,6 @@ services:
   rocketchat:
     image: 891686670852.dkr.ecr.us-east-1.amazonaws.com/ohm/comms-chat:latest
     restart: unless-stopped
-    depends_on:
-      mongo:
-        condition: service_healthy
     volumes:
       - ./uploads:/app/uploads
     env_file:
@@ -32,6 +29,7 @@ services:
      #- ./data/dump:/dump
     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
     labels:
+    # Traefik is a reverse proxy used in the default RocketChat docker config, we haven't set it up as it's not needed for local dev.
       - "traefik.enable=false"
     healthcheck:
       test:
@@ -55,26 +53,3 @@ services:
           echo \"Tried $$i times. Waiting 5 secs...\";
           sleep 5;
         done; (exit $$s)"
-    depends_on:
-      - mongo
-
-  #traefik:
-  #  image: traefik:latest
-  #  restart: unless-stopped
-  #  command: >
-  #    traefik
-  #     --docker
-  #     --acme=true
-  #     --acme.domains='your.domain.tld'
-  #     --acme.email='your@email.tld'
-  #     --acme.entrypoint=https
-  #     --acme.storagefile=acme.json
-  #     --defaultentrypoints=http
-  #     --defaultentrypoints=https
-  #     --entryPoints='Name:http Address::80 Redirect.EntryPoint:https'
-  #     --entryPoints='Name:https Address::443 TLS.Certificates:'
-  #  ports:
-  #    - 80:80
-  #    - 443:443
-  #  volumes:
-  #    - /var/run/docker.sock:/var/run/docker.sock
