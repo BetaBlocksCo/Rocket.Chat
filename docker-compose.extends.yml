@@ -1,13 +1,9 @@
-version: '2.2'
+version: '2.1'
 
 services:
   rocketchat:
     image: rocketchat/rocket.chat:latest
-    scale: 2
     restart: unless-stopped
-    depends_on:
-      mongo:
-        condition: service_healthy
     volumes:
       - ./uploads:/app/uploads
     env_file:
@@ -18,11 +14,10 @@ services:
       - MAIL_URL=smtp://smtp.email
 #       - HTTP_PROXY=http://proxy.domain.com
 #       - HTTPS_PROXY=http://proxy.domain.com
-    command: ./start.sh
+#    command: ./start.sh 
     ports:
-      - 8888
+      - 8888:8888
     labels:
-    # Traefik is a reverse proxy used in the default RocketChat docker config, we haven't set it up as it's not needed for local dev.
       - "traefik.backend=rocketchat"
       - "traefik.frontend.rule=Host: your.domain.tld"
 
@@ -47,9 +42,6 @@ services:
   # it will run the command and remove himself (it will not stay running)
   mongo-init-replica:
     image: mongo:4.0
-    depends_on:
-      mongo:
-        condition: service_healthy
     command: >
       bash -c
         "for i in `seq 1 30`; do
