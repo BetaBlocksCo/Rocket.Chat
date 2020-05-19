@@ -81,3 +81,4 @@ tests/end-to-end/temporary_staged_test
 /storybook-static
 /tests/cypress/screenshots
 data
+rocketchat.env
