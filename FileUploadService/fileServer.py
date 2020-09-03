@@ -35,6 +35,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        print(self.path)
+        if (self.path == '/healthcheck'):
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            payload = "{\n\t\"data\": \"OK\"}".encode()
+            self.wfile.write(payload)
+            return
+
         auth_token = self.headers.get("Authorization")
         payload = "{\n\t\"resume\": \"%s\"\n}"%(auth_token.split(" ")[1])
         if (len(self.path.split('?')) != 2):
