@@ -77,28 +77,29 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if channel["_id"] == channelId:
                 user_authed = True
         if user_authed:
-            f = self.send_file(self.path.split('?')[0])
+            (_, content) = httplib.request("https://s3.amazonaws.com/assets.chat.ohmhealth.com/AcHcMGCYXsDTd7iib/uploads/%s/%s" % (channelId, path), "GET")
+            f = self.send_file(content)
             if f:
                 self.wfile.write(f.read())
 
-    def send_file(self, path):
-        path = self.translate_path(path)
-        (dirname, filename) = os.path.split(path)
-        try:
-            list = os.listdir(dirname)
-            list.sort(key=lambda a: a.lower())
-        except os.error:
-            list = []
+    def send_file(self, file_content):
+        # path = self.translate_path(path)
+        # (dirname, filename) = os.path.split(path)
+        # try:
+        #     list = os.listdir(dirname)
+        #     list.sort(key=lambda a: a.lower())
+        # except os.error:
+        #     list = []
 
-        path = '.%s' % (self.path.split('?')[0])
-        encoded_image = open(path, 'rb').read()
+        # path = '.%s' % (self.path.split('?')[0])
+        # encoded_image = open(path, 'rb').read()
         f = io.BytesIO()
-        f.write(encoded_image)
+        f.write(file_content)
         f.seek(0)
         self.send_response(200)
         self.send_header('Content-Type', 'image/jpeg')
         self.send_header('Content-Disposition', 'attachment; filename="test.jpeg"')
-        self.send_header("Content-Length", str(len(encoded_image)))
+        self.send_header("Content-Length", str(len(file_content)))
         self.send_header("Access-Control-Allow-Origin", ALLOW_ORIGIN)
         self.send_header("Access-Control-Allow-Headers", "Authorization")
         self.end_headers()
