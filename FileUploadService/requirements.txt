@@ -1,0 +1,3 @@
+httplib2==0.18.1
+mercurial==5.4.2
+python-dotenv==0.14.0
