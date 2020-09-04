@@ -40,11 +40,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            payload = "{\n\t\"data\": \"OK\"}".encode()
+            payload = "{\n\t\"data\": \"OK\"\n}".encode()
             self.wfile.write(payload)
             return
 
-        auth_token = self.headers.get("Authorization")
+        auth_token = self.headers.get("authorization")
         payload = "{\n\t\"resume\": \"%s\"\n}"%(auth_token.split(" ")[1])
         if (len(self.path.split('?')) != 2):
             self.send_response(401)
