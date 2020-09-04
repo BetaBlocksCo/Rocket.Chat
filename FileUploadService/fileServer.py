@@ -25,6 +25,7 @@ SUFFIX = urllib.parse.quote('.xhtml')
 httplib = httplib2.Http(".cache")
 ALLOW_ORIGIN = os.getenv("ALLOW_ORIGIN")
 ROCKETCHAT_URL = os.getenv("ROCKETCHAT_URL")
+ROCKETCHAT_INSTANCE_ID = "G2eKN9oqd35fTBPRd"
 LISTEN_PORT = int(os.getenv("LISTEN_PORT"))
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -45,6 +46,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
 
         auth_token = self.headers.get("authorization")
+        print(auth_token)
         payload = "{\n\t\"resume\": \"%s\"\n}"%(auth_token.split(" ")[1])
         if (len(self.path.split('?')) != 2):
             self.send_response(401)
@@ -86,7 +88,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if channel["_id"] == channelId:
                 user_authed = True
         if user_authed:
-            (_, content) = httplib.request("https://s3.amazonaws.com/assets.chat.ohmhealth.com/AcHcMGCYXsDTd7iib/uploads/%s/%s" % (channelId, path), "GET")
+            (_, content) = httplib.request("https://s3.amazonaws.com/assets.chat.ohmhealth.com/%s/uploads/%s/%s" % (ROCKETCHAT_INSTANCE_ID, channelId, path), "GET")
             f = self.send_file(content)
             if f:
                 self.wfile.write(f.read())
