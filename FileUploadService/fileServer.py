@@ -25,7 +25,7 @@ SUFFIX = urllib.parse.quote('.xhtml')
 httplib = httplib2.Http(".cache")
 ALLOW_ORIGIN = os.getenv("ALLOW_ORIGIN")
 ROCKETCHAT_URL = os.getenv("ROCKETCHAT_URL")
-ROCKETCHAT_INSTANCE_ID = "G2eKN9oqd35fTBPRd"
+ROCKETCHAT_INSTANCE_ID = "ZMAtjgHnwynoMHqR6"
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 LISTEN_PORT = int(os.getenv("LISTEN_PORT"))
 
